@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Yomi Cookies</title>
+    <style>
+        :root {
+            --primary-pink: #f2a8b3;
+            --brand-red: #d3043a;
+            --text-dark: #000000;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+            --btn-gray: #f0f0f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .logo-placeholder {
+            max-height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .cart-trigger-btn {
+            background: var(--brand-red);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s, background-color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .cart-trigger-btn:hover {
+            background: #b00330;
+            transform: translateY(-1px);
+        }
+
+        .cart-badge {
+            background-color: var(--primary-pink);
+            color: var(--brand-red);
+            font-size: 12px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Container & Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 30px 20px;
+        }
+
+        .category {
+            margin-bottom: 45px;
+            width: 100%;
+        }
+
+        .category h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--brand-red);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-pink);
+            display: inline-block;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        /* Card Style */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eaeaea;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-width: 0;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            }
+        }
+
+        /* Card Gallery Container */
+        .card-gallery-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: pan-y;
+            min-width: 0;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            user-select: none;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+        }
+
+        .card-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(4px);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.1s ease, background-color 0.15s ease;
+        }
+
+        .card-nav-btn:active {
+            transform: translateY(-50%) scale(0.9);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .card-nav-btn.prev { left: 6px; }
+        .card-nav-btn.next { right: 6px; }
+
+        .card-dots {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 4px;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 3px 6px;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+        }
+
+        .card-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.45);
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .card-dot.active {
+            background: #fff;
+            transform: scale(1.25);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 6px;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000000;
+            margin-top: auto;
+            margin-bottom: 12px;
+        }
+
+        /* Card Action Container */
+        .card-action {
+            width: 100%;
+            height: 38px;
+            min-height: 38px;
+            max-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            min-width: 0;
+        }
+
+        .btn-add {
+            width: 100%;
+            height: 38px;
+            background-color: var(--btn-gray);
+            color: var(--text-dark);
+            border: none;
+            padding: 0 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-add:hover {
+            background-color: #e2e2e2;
+        }
+
+        /* Stepper Controls */
+        .card-qty-stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--brand-red);
+            color: #fff;
+            border-radius: 20px;
+            padding: 4px 6px;
+            width: 100%;
+            height: 38px;
+            min-width: 0;
+        }
+
+        .card-qty-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .card-qty-btn:hover {
+                background: rgba(255, 255, 255, 0.35);
+            }
+        }
+
+        .card-qty-val {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            user-select: none;
+        }
+
+        /* Product Detail Modal */
+        .product-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 1100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .product-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .product-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -46%) scale(0.96);
+            width: calc(100% - 32px);
+            max-width: 440px;
+            max-height: 90vh;
+            max-height: 90dvh;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+            z-index: 1200;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-modal.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .product-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #222;
+            cursor: pointer;
+            z-index: 3;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        /* Modal Gallery & Slider */
+        .product-modal-gallery {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: pan-y;
+            flex-shrink: 0;
+        }
+
+        .product-modal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.15s ease;
+            pointer-events: none;
+        }
+
+        .gallery-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(6px);
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #222;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .gallery-nav-btn:active {
+            transform: translateY(-50%) scale(0.92);
+        }
+
+        .gallery-nav-btn.prev { left: 12px; }
+        .gallery-nav-btn.next { right: 12px; }
+
+        .gallery-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 4px 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+        }
+
+        .gallery-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .gallery-dot.active {
+            background: #fff;
+            transform: scale(1.3);
+        }
+
+        .product-modal-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 6px;
+        }
+
+        .product-modal-desc {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.45;
+            margin-bottom: 16px;
+        }
+
+        .product-modal-price {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--brand-red);
+            margin-bottom: 16px;
+        }
+
+        /* Drawer Cart */
+        .cart-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .cart-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            transform: translateX(100%);
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            height: 100dvh;
+            background: #fff;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 24px calc(36px + env(safe-area-inset-bottom, 0px)) 24px;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cart-drawer.active {
+            transform: translateX(0);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 16px;
+        }
+
+        .cart-header h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .cart-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .clear-cart-btn {
+            background: none;
+            border: 1px solid #eee;
+            color: #888;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .clear-cart-btn:hover {
+            color: var(--brand-red);
+            border-color: var(--brand-red);
+            background-color: rgba(211, 4, 58, 0.05);
+        }
+
+        .close-cart-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #888;
+            line-height: 1;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .cart-item-img {
+            width: 48px;
+            height: 48px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+            background-color: #f0f0f0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cart-item-info strong {
+            display: block;
+            font-size: 14px;
+            color: #000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cart-item-info span {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Stepper Controls (Cart Drawer) */
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f5f5f5;
+            padding: 4px 8px;
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-red);
+            transition: background-color 0.15s ease;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .qty-btn:hover {
+                background-color: rgba(211, 4, 58, 0.08);
+            }
+        }
+
+        .qty-btn.trash {
+            color: #e63946;
+        }
+
+        .cart-footer {
+            margin-top: auto;
+            padding-top: 16px;
+            padding-bottom: 10px;
+            border-top: 2px solid var(--brand-red);
+        }
+
+        .cart-total {
+            font-size: 18px;
+            font-weight: 800;
+            color: #000;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .btn-checkout {
+            background-color: #25d366;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        .btn-checkout:hover {
+            background-color: #1ebc57;
+        }
+
+        @media (max-width: 600px) {
+            .header-container { padding: 14px 16px; }
+            .container { padding: 16px; width: 100%; }
+            .grid { 
+                grid-template-columns: repeat(2, minmax(0, 1fr)); 
+                gap: 12px; 
+                width: 100%;
+            }
+            
+            .card { 
+                padding: 10px; 
+                transform: none !important;
+                transition: none;
+                width: 100%;
+                min-width: 0;
+            }
+            .card:hover, .card:active {
+                transform: none !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+            }
+
+            .card-gallery-wrap { 
+                margin-bottom: 10px;
+                border-radius: 10px;
+            }
+
+            .card-nav-btn {
+                width: 20px;
+                height: 20px;
+                font-size: 8px;
+                background: rgba(255, 255, 255, 0.45);
+                box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            }
+
+            .card-nav-btn.prev { left: 4px; }
+            .card-nav-btn.next { right: 4px; }
+
+            .card-title { font-size: 13.5px; }
+            .card-desc { font-size: 11px; margin-bottom: 8px; }
+            .card-price { font-size: 13.5px; margin-bottom: 8px; }
+            
+            .card-action {
+                height: 38px;
+                min-height: 38px;
+                max-height: 38px;
+            }
+
+            .btn-add { 
+                height: 38px;
+                padding: 0 6px; 
+                font-size: 10.5px; 
+                letter-spacing: 0px;
+            }
+            
+            .card-qty-stepper {
+                height: 38px;
+                padding: 3px 6px;
+            }
+            
+            .card-qty-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 15px;
+            }
+            
+            .card-qty-val {
+                font-size: 13px;
+            }
+
+            .qty-controls {
+                gap: 8px;
+                padding: 4px 8px;
+            }
+
+            .qty-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 16px;
+            }
+
+            .cart-drawer { 
+                max-width: 100%; 
+                padding: 20px 20px calc(42px + env(safe-area-inset-bottom, 0px)) 20px;
+            }
+
+            .product-modal-content {
+                padding: 16px;
+            }
+            .product-modal-title {
+                font-size: 18px;
+            }
+            .product-modal-desc {
+                font-size: 13px;
+                margin-bottom: 12px;
+            }
+            .product-modal-price {
+                font-size: 16px;
+                margin-bottom: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <img src="img/logo.png" alt="Logo Yomi Cookies" class="logo-placeholder">
+            <button class="cart-trigger-btn" onclick="toggleCartDrawer()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span>Carrito</span>
+                <span class="cart-badge" id="header-cart-badge">0</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="menu">
+            
+            <section class="category">
+                <h2>Clásicas (50gr)</h2>
+                <div class="grid">
+                    <div class="card" data-name="Chocolate Chips" data-price="4000">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/chocolate-chips.jpg" alt="Chocolate Chips" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Chocolate Chips</h3>
+                        <p class="card-desc">Galleta de vainilla con gotas de chocolate.</p>
+                        <div class="card-price">$4.000 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Red Velvet Chips" data-price="4000">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/red-velvet-chips.jpg" alt="Red Velvet Chips" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Red Velvet Chips</h3>
+                        <p class="card-desc">Galleta de red velvet con gotas de chocolate blanco.</p>
+                        <div class="card-price">$4.000 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Doble Chocolate" data-price="4000">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/doble-chocolate.jpg" alt="Doble Chocolate" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Doble Chocolate</h3>
+                        <p class="card-desc">Galleta de chocolate con gotas de chocolate blanco.</p>
+                        <div class="card-price">$4.000 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Choco-Nuez" data-price="4000">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/choco-nuez.jpg" alt="Choco-Nuez" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Choco-Nuez</h3>
+                        <p class="card-desc">Galleta de vainilla con gotas de chocolate y trozos de nuez de nogal tostada.</p>
+                        <div class="card-price">$4.000 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="category">
+                <h2>Rellenas (80gr)</h2>
+                <div class="grid">
+                    <div class="card" data-name="Alfajor" data-price="7500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/alfajor.jpg" alt="Alfajor" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Alfajor</h3>
+                        <p class="card-desc">Galleta de vainilla con coco natural rallado, rellena de dulce de leche.</p>
+                        <div class="card-price">$7.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Nuez y Dulce de Leche" data-price="7500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/nuez-dulce-de-leche.jpg" alt="Nuez y Dulce de Leche" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Nuez y Dulce de Leche</h3>
+                        <p class="card-desc">Galleta de vainilla con trozos de nuez de nogal, rellena de dulce de leche.</p>
+                        <div class="card-price">$7.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Cookies 'N Cream" data-price="8500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/cookies-n-cream.jpg" alt="Cookies 'N Cream" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Cookies 'N Cream</h3>
+                        <p class="card-desc">Galleta de vainilla con trozos de galleta oreo y gotas de chocolate blanco rellena de crema oreo.</p>
+                        <div class="card-price">$8.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Nutella" data-price="8500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/nutella.jpg" alt="Nutella" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Nutella</h3>
+                        <p class="card-desc">Galleta de vainilla con gotas de chocolate, rellena de nutella.</p>
+                        <div class="card-price">$8.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Triple Chocolate" data-price="8500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/triple-chocolate.jpg" alt="Triple Chocolate" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Triple Chocolate</h3>
+                        <p class="card-desc">Galleta de chocolate con gotas de chocolate blanco, rellena de Ovomaltina.</p>
+                        <div class="card-price">$8.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Red Velvet Oreo Cheesecake" data-price="8500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/red-velvet-oreo-cheesecake.jpg" alt="Red Velvet Oreo Cheesecake" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Red Velvet Oreo Cheesecake</h3>
+                        <p class="card-desc">Galleta red velvet con trozos de galleta oreo y gotas de chocolate blanco, rellena de queso crema.</p>
+                        <div class="card-price">$8.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Pie de Limón" data-price="8500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/pie-de-limon.jpg" alt="Pie de Limón" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Pie de Limón</h3>
+                        <p class="card-desc">Galleta con ralladura de limón, trozos de galleta oreo golden y gotas de chocolate blanco rellena de crema de pie de limón.</p>
+                        <div class="card-price">$8.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Pie de Parchita" data-price="8500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/pie-de-parchita.jpg" alt="Pie de Parchita" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Pie de Parchita</h3>
+                        <p class="card-desc">Galleta con trozos de galleta oreo golden y gotas de chocolate blanco rellena de crema de pie de parchita artesanal.</p>
+                        <div class="card-price">$8.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Pistacho Vainilla" data-price="9500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/pistacho-vainilla.jpg" alt="Pistacho Vainilla" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Pistacho Vainilla</h3>
+                        <p class="card-desc">Galleta de vainilla con trozos de pistachos tostados y gotas de chocolate blanco rellena de crema artesanal de pistacho.</p>
+                        <div class="card-price">$9.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Pistacho Chocolate" data-price="12500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/pistacho-chocolate.jpg" alt="Pistacho Chocolate" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Pistacho Chocolate</h3>
+                        <p class="card-desc">Galleta de chocolate con trozos de pistachos tostados y gotas de chocolate blanco rellena de crema artesanal de pistacho.</p>
+                        <div class="card-price">$12.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="category">
+                <h2>Para Compartir</h2>
+                <div class="grid">
+                    <div class="card" data-name="Yomi Pack" data-price="52000">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/yomi-pack.jpg" alt="Yomi Pack" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Yomi Pack</h3>
+                        <p class="card-desc">20 galletas de 40gr con topping de gotas de chocolate (10 de vainilla y 10 de chocolate).</p>
+                        <div class="card-price">$52.000 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Pack Mini Rellenas (x50)" data-price="82000">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/pack-mini-rellenas-50.jpg" alt="Pack Mini Rellenas x50" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Pack Mini Rellenas (x50)</h3>
+                        <p class="card-desc">Pedido con 3 horas de anticipación - Mix de 50 mini galletas rellenas de chocolate y chocolate blanco, con topping de chocolate con leche y blanco.</p>
+                        <div class="card-price">$82.000 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
+                    <div class="card" data-name="Pack Mini Rellenas (x100)" data-price="148000">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/pack-mini-rellenas-100.jpg" alt="Pack Mini Rellenas x100" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Pack Mini Rellenas (x100)</h3>
+                        <p class="card-desc">Pedido con 3 horas de anticipación - Mix de 100 mini galletas rellenas de chocolate y chocolate blanco, con topping de chocolate con leche y blanco.</p>
+                        <div class="card-price">$148.000 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="product-modal-overlay" id="product-modal-overlay" onclick="closeProductModal()"></div>
+    <div class="product-modal" id="product-modal">
+        <button class="product-modal-close" onclick="closeProductModal()" aria-label="Cerrar modal">✕</button>
+        
+        <div class="product-modal-gallery" id="pm-gallery">
+            <button class="gallery-nav-btn prev" id="pm-prev" onclick="prevModalImage(event)" aria-label="Imagen anterior">❮</button>
+            <img src="" alt="" class="product-modal-img" id="pm-img">
+            <button class="gallery-nav-btn next" id="pm-next" onclick="nextModalImage(event)" aria-label="Imagen siguiente">❯</button>
+            <div class="gallery-dots" id="pm-dots"></div>
+        </div>
+
+        <div class="product-modal-content">
+            <h3 class="product-modal-title" id="pm-title"></h3>
+            <p class="product-modal-desc" id="pm-desc"></p>
+            <div class="product-modal-price" id="pm-price"></div>
+            <div class="card-action" id="pm-action"></div>
+        </div>
+    </div>
+
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
+    <aside class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Tu Pedido</h3>
+            <div class="cart-header-actions">
+                <button class="clear-cart-btn" id="clear-cart-btn" onclick="clearCart()">Vaciar</button>
+                <button class="close-cart-btn" onclick="toggleCartDrawer()">✕</button>
+            </div>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p style="color: #888; text-align: center; margin-top: 20px; font-size: 14px;">El carrito está vacío</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total">$0 COP</span>
+            </div>
+            <button class="btn-checkout" onclick="checkout()">Enviar pedido por WhatsApp</button>
+        </div>
+    </aside>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cookie_cart')) || [];
+        let activeModalProduct = null;
+        let isCardSwiping = false;
+
+        function saveCart() {
+            localStorage.setItem('cookie_cart', JSON.stringify(cart));
+        }
+
+        function formatCOP(amount) {
+            return '$' + amount.toLocaleString('es-CO') + ' COP';
+        }
+
+        function addToCart(name, price, img) {
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price: parseFloat(price), image: img, quantity: 1 });
+            }
+            updateApp();
+        }
+
+        function changeQuantity(name, newQty) {
+            const qty = parseInt(newQty);
+            if (qty <= 0) {
+                cart = cart.filter(item => item.name !== name);
+            } else {
+                const item = cart.find(item => item.name === name);
+                if (item) item.quantity = qty;
+            }
+            updateApp();
+        }
+
+        function clearCart() {
+            if (cart.length === 0) return;
+            cart = [];
+            updateApp();
+        }
+
+        function toggleCartDrawer() {
+            document.getElementById('cart-drawer').classList.toggle('active');
+            document.getElementById('cart-overlay').classList.toggle('active');
+        }
+
+        /* Generador y Validador Dinámico de Imágenes (hasta 5 por producto) */
+        function generateCandidateUrls(primaryImg, customImages) {
+            if (customImages) {
+                return customImages.split(',').map(s => s.trim()).filter(Boolean);
+            }
+            const candidateList = [primaryImg];
+            const lastDot = primaryImg.lastIndexOf('.');
+            if (lastDot !== -1) {
+                const base = primaryImg.substring(0, lastDot);
+                const ext = primaryImg.substring(lastDot);
+                for (let i = 2; i <= 5; i++) {
+                    candidateList.push(`${base}-${i}${ext}`);
+                }
+            }
+            return candidateList;
+        }
+
+        function initCardGalleries() {
+            document.querySelectorAll('.card').forEach(card => {
+                const primaryImg = card.querySelector('.card-img').getAttribute('src');
+                const customImages = card.getAttribute('data-images');
+                const candidateList = generateCandidateUrls(primaryImg, customImages);
+
+                const secondaryImages = candidateList.slice(1);
+                const checkPromises = secondaryImages.map(url => {
+                    return new Promise(resolve => {
+                        const testImg = new Image();
+                        testImg.onload = () => resolve(url);
+                        testImg.onerror = () => resolve(null);
+                        testImg.src = url;
+                    });
+                });
+
+                Promise.all(checkPromises).then(results => {
+                    const validList = [candidateList[0], ...results.filter(Boolean)];
+                    if (validList.length > 1) {
+                        card.dataset.validImages = JSON.stringify(validList);
+                        card.dataset.currentIndex = "0";
+
+                        const prevBtn = card.querySelector('.card-nav-btn.prev');
+                        const nextBtn = card.querySelector('.card-nav-btn.next');
+                        const dotsEl = card.querySelector('.card-dots');
+
+                        if (prevBtn) prevBtn.style.display = 'flex';
+                        if (nextBtn) nextBtn.style.display = 'flex';
+                        if (dotsEl) {
+                            dotsEl.style.display = 'flex';
+                            renderCardDots(card, validList, 0);
+                        }
+
+                        // Configurar Swipe en la Card
+                        const wrap = card.querySelector('.card-gallery-wrap');
+                        let touchStartX = 0;
+                        let touchStartY = 0;
+
+                        wrap.addEventListener('touchstart', e => {
+                            touchStartX = e.changedTouches[0].screenX;
+                            touchStartY = e.changedTouches[0].screenY;
+                        }, { passive: true });
+
+                        wrap.addEventListener('touchend', e => {
+                            const touchEndX = e.changedTouches[0].screenX;
+                            const touchEndY = e.changedTouches[0].screenY;
+                            const diffX = touchStartX - touchEndX;
+                            const diffY = touchStartY - touchEndY;
+
+                            if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY)) {
+                                isCardSwiping = true;
+                                if (diffX > 0) {
+                                    changeCardImage(e, wrap.querySelector('.card-nav-btn.next'), 1);
+                                } else {
+                                    changeCardImage(e, wrap.querySelector('.card-nav-btn.prev'), -1);
+                                }
+                                setTimeout(() => { isCardSwiping = false; }, 200);
+                            }
+                        }, { passive: true });
+                    }
+                });
+            });
+        }
+
+        function changeCardImage(e, btn, direction) {
+            if (e && e.stopPropagation) e.stopPropagation();
+            const card = btn.closest('.card');
+            const validImagesStr = card.dataset.validImages;
+            if (!validImagesStr) return;
+            const images = JSON.parse(validImagesStr);
+            let currentIndex = parseInt(card.dataset.currentIndex || "0");
+            currentIndex = (currentIndex + direction + images.length) % images.length;
+            card.dataset.currentIndex = currentIndex;
+
+            const imgEl = card.querySelector('.card-img');
+            if (imgEl) {
+                imgEl.src = images[currentIndex];
+            }
+            renderCardDots(card, images, currentIndex);
+        }
+
+        function renderCardDots(card, images, activeIdx) {
+            const dotsEl = card.querySelector('.card-dots');
+            if (!dotsEl) return;
+            dotsEl.innerHTML = images.map((_, idx) => `
+                <span class="card-dot ${idx === activeIdx ? 'active' : ''}"></span>
+            `).join('');
+        }
+
+        /* Modal & Dynamic Multi-Image Logic */
+        function openProductModal(card) {
+            if (isCardSwiping) return;
+
+            const name = card.getAttribute('data-name');
+            const price = card.getAttribute('data-price');
+            const desc = card.querySelector('.card-desc').innerText;
+            const primaryImg = card.querySelector('.card-img').getAttribute('src');
+
+            const validImagesStr = card.dataset.validImages;
+            const imagesList = validImagesStr ? JSON.parse(validImagesStr) : [primaryImg];
+            const startIdx = parseInt(card.dataset.currentIndex || "0");
+
+            activeModalProduct = { 
+                name, 
+                price: parseFloat(price), 
+                image: imagesList[0],
+                images: imagesList,
+                currentIndex: startIdx < imagesList.length ? startIdx : 0,
+                desc 
+            };
+
+            document.getElementById('pm-title').innerText = name;
+            document.getElementById('pm-desc').innerText = desc;
+            document.getElementById('pm-price').innerText = formatCOP(parseFloat(price));
+
+            renderModalGallery();
+            renderModalButton();
+
+            document.getElementById('product-modal').classList.add('active');
+            document.getElementById('product-modal-overlay').classList.add('active');
+        }
+
+        function renderModalGallery() {
+            if (!activeModalProduct) return;
+            const imgEl = document.getElementById('pm-img');
+            const prevBtn = document.getElementById('pm-prev');
+            const nextBtn = document.getElementById('pm-next');
+            const dotsContainer = document.getElementById('pm-dots');
+            const { images, currentIndex, name } = activeModalProduct;
+
+            imgEl.src = images[currentIndex];
+            imgEl.alt = `${name} - Foto ${currentIndex + 1}`;
+
+            if (images.length > 1) {
+                prevBtn.style.display = 'flex';
+                nextBtn.style.display = 'flex';
+                dotsContainer.style.display = 'flex';
+
+                dotsContainer.innerHTML = images.map((_, idx) => `
+                    <span class="gallery-dot ${idx === currentIndex ? 'active' : ''}"></span>
+                `).join('');
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                dotsContainer.style.display = 'none';
+            }
+        }
+
+        function nextModalImage(e) {
+            if (e) e.stopPropagation();
+            if (!activeModalProduct || activeModalProduct.images.length <= 1) return;
+            activeModalProduct.currentIndex = (activeModalProduct.currentIndex + 1) % activeModalProduct.images.length;
+            renderModalGallery();
+        }
+
+        function prevModalImage(e) {
+            if (e) e.stopPropagation();
+            if (!activeModalProduct || activeModalProduct.images.length <= 1) return;
+            activeModalProduct.currentIndex = (activeModalProduct.currentIndex - 1 + activeModalProduct.images.length) % activeModalProduct.images.length;
+            renderModalGallery();
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.remove('active');
+            document.getElementById('product-modal-overlay').classList.remove('active');
+            activeModalProduct = null;
+        }
+
+        function renderModalButton() {
+            if (!activeModalProduct) return;
+            const actionContainer = document.getElementById('pm-action');
+            const cartItem = cart.find(item => item.name === activeModalProduct.name);
+            const name = activeModalProduct.name;
+            const price = activeModalProduct.price;
+            const img = activeModalProduct.image;
+
+            if (cartItem && cartItem.quantity > 0) {
+                const decrementIcon = cartItem.quantity === 1 
+                    ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>'
+                    : '−';
+
+                actionContainer.innerHTML = `
+                    <div class="card-qty-stepper">
+                        <button class="card-qty-btn" onclick="changeQuantity('${name}', ${cartItem.quantity - 1})" aria-label="Disminuir">
+                            ${decrementIcon}
+                        </button>
+                        <span class="card-qty-val">${cartItem.quantity}</span>
+                        <button class="card-qty-btn" onclick="changeQuantity('${name}', ${cartItem.quantity + 1})" aria-label="Aumentar">+</button>
+                    </div>
+                `;
+            } else {
+                actionContainer.innerHTML = `
+                    <button class="btn-add" onclick="addToCart('${name}', ${price}, '${img}')">Agregar al carrito</button>
+                `;
+            }
+        }
+
+        function updateApp() {
+            saveCart();
+            renderProductButtons();
+            renderCart();
+            renderModalButton();
+        }
+
+        function renderProductButtons() {
+            document.querySelectorAll('.card').forEach(card => {
+                const name = card.getAttribute('data-name');
+                const price = card.getAttribute('data-price');
+                const img = card.querySelector('.card-img').getAttribute('src');
+                const actionContainer = card.querySelector('.card-action');
+                const cartItem = cart.find(item => item.name === name);
+
+                if (cartItem && cartItem.quantity > 0) {
+                    const decrementIcon = cartItem.quantity === 1 
+                        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>'
+                        : '−';
+
+                    actionContainer.innerHTML = `
+                        <div class="card-qty-stepper">
+                            <button class="card-qty-btn" onclick="changeQuantity('${name}', ${cartItem.quantity - 1})" aria-label="Disminuir">
+                                ${decrementIcon}
+                            </button>
+                            <span class="card-qty-val">${cartItem.quantity}</span>
+                            <button class="card-qty-btn" onclick="changeQuantity('${name}', ${cartItem.quantity + 1})" aria-label="Aumentar">+</button>
+                        </div>
+                    `;
+                } else {
+                    actionContainer.innerHTML = `
+                        <button class="btn-add" onclick="addToCart('${name}', ${price}, '${img}')">Agregar al carrito</button>
+                    `;
+                }
+            });
+        }
+
+        function renderCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            const headerCartBadge = document.getElementById('header-cart-badge');
+            const clearCartBtn = document.getElementById('clear-cart-btn');
+            
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            let totalItems = 0;
+
+            cart.forEach((item) => {
+                total += item.price * item.quantity;
+                totalItems += item.quantity;
+                
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('cart-item');
+                const decrementIcon = item.quantity === 1 
+                    ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>'
+                    : '−';
+
+                itemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                    <div class="cart-item-info">
+                        <strong>${item.name}</strong>
+                        <span>${formatCOP(item.price * item.quantity)}</span>
+                    </div>
+                    <div class="qty-controls">
+                        <button class="qty-btn ${item.quantity === 1 ? 'trash' : ''}" onclick="changeQuantity('${item.name}', ${item.quantity - 1})">
+                            ${decrementIcon}
+                        </button>
+                        <span style="font-size: 14px; font-weight: 700; color: #000; min-width: 14px; text-align: center;">${item.quantity}</span>
+                        <button class="qty-btn" onclick="changeQuantity('${item.name}', ${item.quantity + 1})">+</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+            });
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="color: #888; text-align: center; margin-top: 20px; font-size: 14px;">El carrito está vacío</p>';
+                if (clearCartBtn) clearCartBtn.style.display = 'none';
+            } else {
+                if (clearCartBtn) clearCartBtn.style.display = 'inline-block';
+            }
+
+            cartTotalElement.innerText = formatCOP(total);
+            headerCartBadge.innerText = totalItems;
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Agrega algunos productos primero.");
+                return;
+            }
+            
+            const phoneNumber = "584247551113";
+            
+            let total = 0;
+            let totalItems = 0;
+            let itemsList = "";
+
+            cart.forEach(item => {
+                const itemSubtotal = item.price * item.quantity;
+                total += itemSubtotal;
+                totalItems += item.quantity;
+                itemsList += `- ${item.quantity}x ${item.name} (${formatCOP(itemSubtotal)})\n`;
+            });
+            
+            let text = "¡Deseo hacer un pedido!\n\n";
+            text += "*Detalle del pedido:*\n";
+            text += itemsList;
+            text += `\nTotal de productos: ${totalItems}\n`;
+            text += `Total a pagar: *${formatCOP(total)}*\n`;
+
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        /* Event Listeners */
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => openProductModal(card));
+        });
+
+        document.querySelectorAll('.card-action, #pm-action').forEach(action => {
+            action.addEventListener('click', (e) => e.stopPropagation());
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeProductModal();
+            if (e.key === 'ArrowRight') nextModalImage();
+            if (e.key === 'ArrowLeft') prevModalImage();
+        });
+
+        /* Swipe en Mobile para el Modal */
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const galleryEl = document.getElementById('pm-gallery');
+
+        galleryEl.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        galleryEl.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 45) nextModalImage();
+            if (touchEndX - touchStartX > 45) prevModalImage();
+        }, { passive: true });
+
+        initCardGalleries();
+        updateApp();
+    </script>
+</body>
+</html>
