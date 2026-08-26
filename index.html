@@ -836,6 +836,7 @@
     <div class="container">
         <main class="menu">
             
+            <!-- CLÁSICAS (50gr) -->
             <section class="category">
                 <h2>Clásicas (50gr)</h2>
                 <div class="grid">
@@ -893,9 +894,11 @@
                 </div>
             </section>
 
+            <!-- RELLENAS (80gr) - Organizadas de menor a mayor precio -->
             <section class="category">
                 <h2>Rellenas (80gr)</h2>
                 <div class="grid">
+                    <!-- $6.500 COP -->
                     <div class="card" data-name="Alfajor" data-price="6500">
                         <div class="card-gallery-wrap">
                             <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
@@ -922,6 +925,7 @@
                         <div class="card-action"></div>
                     </div>
 
+                    <!-- $7.900 COP -->
                     <div class="card" data-name="Cookies 'N Cream" data-price="7900">
                         <div class="card-gallery-wrap">
                             <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
@@ -961,19 +965,6 @@
                         <div class="card-action"></div>
                     </div>
 
-                    <div class="card" data-name="Red Velvet Oreo Cheesecake" data-price="8500">
-                        <div class="card-gallery-wrap">
-                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
-                            <img src="img/red-velvet-oreo-cheesecake.jpg" alt="Red Velvet Oreo Cheesecake" class="card-img">
-                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
-                            <div class="card-dots"></div>
-                        </div>
-                        <h3 class="card-title">Red Velvet Oreo Cheesecake</h3>
-                        <p class="card-desc">Galleta red velvet con trozos de galleta oreo y gotas de chocolate blanco, rellena de queso crema.</p>
-                        <div class="card-price">$8.500 COP</div>
-                        <div class="card-action"></div>
-                    </div>
-
                     <div class="card" data-name="Pie de Limón" data-price="7900">
                         <div class="card-gallery-wrap">
                             <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
@@ -1000,6 +991,20 @@
                         <div class="card-action"></div>
                     </div>
 
+                    <!-- $8.500 COP -->
+                    <div class="card" data-name="Red Velvet Oreo Cheesecake" data-price="8500">
+                        <div class="card-gallery-wrap">
+                            <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
+                            <img src="img/red-velvet-oreo-cheesecake.jpg" alt="Red Velvet Oreo Cheesecake" class="card-img">
+                            <button class="card-nav-btn next" onclick="changeCardImage(event, this, 1)" aria-label="Siguiente">❯</button>
+                            <div class="card-dots"></div>
+                        </div>
+                        <h3 class="card-title">Red Velvet Oreo Cheesecake</h3>
+                        <p class="card-desc">Galleta red velvet con trozos de galleta oreo y gotas de chocolate blanco, rellena de queso crema.</p>
+                        <div class="card-price">$8.500 COP</div>
+                        <div class="card-action"></div>
+                    </div>
+
                     <div class="card" data-name="Pistacho Vainilla" data-price="8500">
                         <div class="card-gallery-wrap">
                             <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
@@ -1013,6 +1018,7 @@
                         <div class="card-action"></div>
                     </div>
 
+                    <!-- $10.500 COP -->
                     <div class="card" data-name="Pistacho Chocolate" data-price="10500">
                         <div class="card-gallery-wrap">
                             <button class="card-nav-btn prev" onclick="changeCardImage(event, this, -1)" aria-label="Anterior">❮</button>
@@ -1028,6 +1034,7 @@
                 </div>
             </section>
 
+            <!-- PARA COMPARTIR -->
             <section class="category">
                 <h2>Para Compartir</h2>
                 <div class="grid">
@@ -1074,6 +1081,7 @@
         </main>
     </div>
 
+    <!-- Product Modal / Lightbox Slider -->
     <div class="product-modal-overlay" id="product-modal-overlay" onclick="closeProductModal()"></div>
     <div class="product-modal" id="product-modal">
         <button class="product-modal-close" onclick="closeProductModal()" aria-label="Cerrar modal">✕</button>
@@ -1093,6 +1101,7 @@
         </div>
     </div>
 
+    <!-- Cart Drawer -->
     <div class="cart-overlay" id="cart-overlay" onclick="toggleCartDrawer()"></div>
     <aside class="cart-drawer" id="cart-drawer">
         <div class="cart-header">
