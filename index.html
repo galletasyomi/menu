@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Menú Yomi Cookies</title>
     <style>
         :root {
@@ -22,6 +22,7 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         html, body {
@@ -29,6 +30,7 @@
             width: 100%;
             max-width: 100%;
             position: relative;
+            touch-action: manipulation;
         }
 
         body {
@@ -87,13 +89,13 @@
             transition: transform 0.2s, background-color 0.2s;
             animation: wa-nudge 4s infinite ease-in-out;
             flex-shrink: 0;
+            touch-action: manipulation;
         }
 
         .header-wa-btn:hover {
             background-color: #1ebc57;
         }
 
-        /* Animación sutil de llamada a la acción */
         @keyframes wa-nudge {
             0%, 72%, 100% {
                 transform: scale(1) rotate(0deg);
@@ -126,6 +128,7 @@
             gap: 10px;
             transition: transform 0.2s, background-color 0.2s;
             flex-shrink: 0;
+            touch-action: manipulation;
         }
 
         .cart-trigger-btn:hover {
@@ -188,6 +191,7 @@
             min-width: 0;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            touch-action: manipulation;
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -243,6 +247,7 @@
             z-index: 2;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: transform 0.1s ease, background-color 0.15s ease;
+            touch-action: manipulation;
         }
 
         .card-nav-btn:active {
@@ -320,6 +325,7 @@
             justify-content: center;
             cursor: default;
             min-width: 0;
+            touch-action: manipulation;
         }
 
         .btn-add {
@@ -342,6 +348,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            touch-action: manipulation;
         }
 
         .btn-add:hover {
@@ -360,6 +367,7 @@
             width: 100%;
             height: 38px;
             min-width: 0;
+            touch-action: manipulation;
         }
 
         .card-qty-btn {
@@ -377,6 +385,7 @@
             cursor: pointer;
             transition: background-color 0.2s;
             flex-shrink: 0;
+            touch-action: manipulation;
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -428,6 +437,7 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            touch-action: manipulation;
         }
 
         .product-modal.active {
@@ -455,6 +465,7 @@
             cursor: pointer;
             z-index: 3;
             box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            touch-action: manipulation;
         }
 
         /* Modal Gallery & Slider */
@@ -499,6 +510,7 @@
             z-index: 2;
             box-shadow: 0 2px 6px rgba(0,0,0,0.15);
             transition: background 0.2s, transform 0.1s;
+            touch-action: manipulation;
         }
 
         .gallery-nav-btn:active {
@@ -595,6 +607,7 @@
             flex-direction: column;
             padding: 24px 24px calc(36px + env(safe-area-inset-bottom, 0px)) 24px;
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            touch-action: manipulation;
         }
 
         .cart-drawer.active {
@@ -632,6 +645,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            touch-action: manipulation;
         }
 
         .clear-cart-btn:hover {
@@ -647,6 +661,7 @@
             cursor: pointer;
             color: #888;
             line-height: 1;
+            touch-action: manipulation;
         }
 
         .cart-items {
@@ -701,6 +716,7 @@
             padding: 4px 8px;
             border-radius: 20px;
             flex-shrink: 0;
+            touch-action: manipulation;
         }
 
         .qty-btn {
@@ -717,6 +733,7 @@
             justify-content: center;
             color: var(--brand-red);
             transition: background-color 0.15s ease;
+            touch-action: manipulation;
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -756,6 +773,7 @@
             cursor: pointer;
             width: 100%;
             transition: background-color 0.2s;
+            touch-action: manipulation;
         }
 
         .btn-checkout:hover {
